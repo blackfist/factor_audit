@@ -2,11 +2,20 @@
 Audits a GitHub org to see who hasn't turned on two factor authentication
 
 ## Running it
-Eventually I'll get around to making an escript for it. For now you need to run it like this
+Couple ways to run it. You'll need to specify an environment variable for your github key with either one
+
+Run it from interactive elixir
 
 ```
 GITHUB_API_KEY=blahblahblah iex -S mix
 FactorAudit.main(["org_name"])
+```
+
+build and run a command line tool
+
+```
+mix escript.build
+GITHUB_API_KEY=blahblahblah ./factor_audit org_name
 ```
 
 ## Code Smells
