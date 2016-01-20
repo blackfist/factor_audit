@@ -8,16 +8,18 @@ defmodule FactorAudit do
       "Content-Type": "application/json",
       "Authorization": "token #{System.get_env("GITHUB_API_KEY")}"]
 
-    #url = "https://api.github.com/orgs/heroku/members?filter=2fa_disabled"
-
     {_, [org_name|_], _} = OptionParser.parse(args)
     IO.puts "Looking for users in #{org_name} org that do not have two factor authentication enabled"
+
+    whitelist = WhiteList.read("whitelist.txt")
 
     response = HTTPotion.get make_url(org_name), [headers: headers]
 
     case Poison.Parser.parse(response.body) do
       {:ok, json} ->
-        json |> Enum.each(fn(x) -> UserList.add(users, x["login"]) end)
+        json |>
+        Enum.filter(fn(x) -> !Enum.member?(whitelist, x["login"]) end) |>
+        Enum.each(fn(x) -> UserList.add(users, x["login"]) end)
       _ ->
         IO.puts "Something wrong with the response"
     end
