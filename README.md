@@ -1,6 +1,14 @@
 # FactorAudit
 Audits a GitHub org to see who hasn't turned on two factor authentication
 
+## Running it
+Eventually I'll get around to making an escript for it. For now you need to run it like this
+
+```
+GITHUB_API_KEY=blahblahblah iex -S mix
+FactorAudit.main(["org_name"])
+```
+
 ## Code Smells
 This was a learning exercise and there is some downright shitty code in some
 places. Such as
@@ -12,3 +20,6 @@ places. Such as
 ## Shit I need to fix
 
 * I need to figure out how to read the headers that come back from GitHub and get the url for the next page of results. GitHub paginates the answer so right now this is only reading the first page of results. However, parsing the headers was not trivial enough to make it into my proof of concept code.
+
+## Didn't you write something like this in Golang?
+I sure did. You can find it [here](https://github.com/blackfist/deez_factors). It probably works better too because I was able to lean on code that other people wrote.
