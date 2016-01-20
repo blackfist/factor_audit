@@ -24,7 +24,10 @@ defmodule UserList do
       response = HTTPotion.get url, [headers: headers]
       user_data = response.body |> Poison.Parser.parse!
 
-
+      # Why didn't I use Map.get/3 here? Well this threw me for a while.
+      # Turns out the response from GitHub will have these fields defined
+      # as nil. So I was using Map.get/3 and still getting nil and I was
+      # like "WTF?"
       name = Map.get(user_data, "name") || "No public name"
       email = Map.get(user_data, "email") || "No public email"
       {:update, {value, name, email}}
