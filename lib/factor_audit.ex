@@ -35,7 +35,7 @@ defmodule FactorAudit do
 
     case get_next_link(response.headers) do
       {:ok, next_link} ->
-        IO.puts "got next page #{next_link}"
+        # IO.puts "got next page #{next_link}"
         go_get_users(next_link, user_list, whitelist)
       _ ->
         {:done}
@@ -43,7 +43,7 @@ defmodule FactorAudit do
   end
 
   defp make_url(org_name) do
-    "https://api.github.com/orgs/" <> org_name <> "/members"
+    "https://api.github.com/orgs/" <> org_name <> "/members?filter=2fa_disabled"
   end
 
   def get_next_link(headers) do
@@ -69,11 +69,11 @@ defmodule FactorAudit do
 
         {:ok, clean_link}
       else
-        IO.puts "No more pages"
+        # IO.puts "No more pages"
         {:error, :nolink}
       end
     else
-      IO.puts "No more pages"
+      # IO.puts "No more pages"
       {:error, :nolink}
     end
   end
