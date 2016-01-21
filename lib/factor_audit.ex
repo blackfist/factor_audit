@@ -15,6 +15,7 @@ defmodule FactorAudit do
 
     :timer.sleep(1000)
     UserList.get(users) |> Enum.each(fn(x) -> IO.puts("#{elem(x, 0)}, #{elem(x, 1)}, #{elem(x, 2)}") end)
+    IO.puts "Found #{length(UserList.get(users))} users with 2fa disabled that weren't on the whitelist"
   end
 
   defp go_get_users(url, user_list, whitelist) do
@@ -46,7 +47,7 @@ defmodule FactorAudit do
     "https://api.github.com/orgs/" <> org_name <> "/members?filter=2fa_disabled"
   end
 
-  def get_next_link(headers) do
+  defp get_next_link(headers) do
     list_of_links = headers
       |> Enum.filter(fn(x) -> elem(x, 0) == :"Link" end)
 
