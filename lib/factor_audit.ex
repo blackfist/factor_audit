@@ -19,9 +19,6 @@ defmodule FactorAudit do
       end
     end
 
-    IO.puts "Let me sing of my whitelist"
-    IO.puts whitelist
-
     go_get_users(make_url(org_name), users, whitelist)
 
     :timer.sleep(1000)
