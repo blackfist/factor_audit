@@ -14,8 +14,25 @@ FactorAudit.main(["org_name"])
 build and run a command line tool
 
 ```
+mix deps.get
 mix escript.build
 GITHUB_API_KEY=blahblahblah ./factor_audit org_name
+```
+
+## Whitelisting
+You might have some accounts that you don't want to be alerted about. Just shove them
+into a whitelist. Name it whatever you want. Then invoke it when you start the script
+using the --whitelist option (or -w)
+
+```
+GITHUB_API_KEY=blahblahblah iex -S mix
+FactorAudit.main(["org_name","--whitelist","whitelist.txt"])
+```
+
+```
+mix deps.get
+mix escript.build
+GITHUB_API_KEY=blahblahblah ./factor_audit org_name -w whitelist.txt
 ```
 
 ## Code Smells

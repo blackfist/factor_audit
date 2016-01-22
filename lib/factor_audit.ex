@@ -6,10 +6,21 @@ defmodule FactorAudit do
     {:ok, users} = UserList.new
 
 
-    {_, [org_name|_], _} = OptionParser.parse(args)
+    {options, [org_name], _} = OptionParser.parse(args, aliases: [w: :whitelist])
+
     IO.puts "Looking for users in #{org_name} org that do not have two factor authentication enabled"
 
-    whitelist = WhiteList.read("whitelist.txt")
+    whitelist = []
+    if length(options) > 0 do
+      case hd(options) do
+        {:whitelist, filename} ->
+          whitelist = WhiteList.read(filename)
+        _ ->
+      end
+    end
+
+    IO.puts "Let me sing of my whitelist"
+    IO.puts whitelist
 
     go_get_users(make_url(org_name), users, whitelist)
 
