@@ -30,6 +30,9 @@ defmodule UserList do
       # like "WTF?"
       name = Map.get(user_data, "name") || "No public name"
       email = Map.get(user_data, "email") || "No public email"
+
+      # When a task ends, it automatically sends an info message
+      # this next line is handled by a handle_info
       {:update, {value, name, email}}
     end
     {:noreply, state}
