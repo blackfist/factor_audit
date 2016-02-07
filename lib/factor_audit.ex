@@ -51,11 +51,11 @@ defmodule FactorAudit do
     end
   end
 
-  defp make_url(org_name) do
+  def make_url(org_name) do
     "https://api.github.com/orgs/" <> org_name <> "/members?filter=2fa_disabled"
   end
 
-  defp get_next_link(headers) do
+  def get_next_link(headers) do
     list_of_links = headers
       |> Enum.filter(fn(x) -> elem(x, 0) == :"Link" end)
 
