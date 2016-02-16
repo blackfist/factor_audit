@@ -19,6 +19,14 @@ mix escript.build
 GITHUB_API_KEY=blahblahblah ./factor_audit org_name
 ```
 
+or use docker. You need to create a file called .env and put your GITHUB_API_KEY in there.
+Then you can run
+
+```
+docker build -t factor_audit .
+docker run factor_audit org_name -w whitelist.txt
+```
+
 ## Whitelisting
 You might have some accounts that you don't want to be alerted about. Just shove them
 into a whitelist. Name it whatever you want. Then invoke it when you start the script
