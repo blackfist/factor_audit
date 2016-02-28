@@ -56,34 +56,30 @@ defmodule FactorAudit do
   end
 
   def get_next_link(headers) do
-    list_of_links = headers
-      |> Enum.filter(fn(x) -> elem(x, 0) == :"Link" end)
-
-    if length(list_of_links) > 0 do
-      {:"Link",string_of_links} = list_of_links
-      |> hd
-
-      new_list_of_links = string_of_links
-      |> String.split(",")
-      |> Enum.map(fn(x) -> String.split(x) |> List.to_tuple end)
-      |> Enum.filter(fn(x) -> elem(x,1) == "rel=\"next\"" end)
-
-      if length(new_list_of_links) > 0 do
-        {final_link_string, _} = new_list_of_links |> hd
-
-        clean_link = final_link_string
-        |> String.split(["<",">"])
-        |> Enum.filter(fn(x) -> String.starts_with?(x, "https") end)
-        |> hd
-
-        {:ok, clean_link}
-      else
-        # IO.puts "No more pages"
-        {:error, :nolink}
-      end
-    else
-      # IO.puts "No more pages"
-      {:error, :nolink}
+    case Keyword.fetch(headers, :"Link") do
+      :error -> {:error, :nolink}
+      {:ok, string_of_links} -> next_extractor(string_of_links)
     end
+  end
+
+  def next_extractor(string_of_links) do
+    links = string_of_links
+    |> String.split(",")
+    |> Enum.map(fn(x) -> String.split(x) |> List.to_tuple end)
+    |> Enum.filter(fn(x) -> elem(x,1) == "rel=\"next\"" end)
+
+    case links do
+      [] -> {:error, :nolink}
+      [final_link_string] -> final_link_string |> elem(0) |> url_extractor
+      _ -> {:error, :nolink}
+    end
+  end
+
+  def url_extractor(link_string) do
+    finished = link_string
+    |> String.split(["<",">"])
+    |> Enum.filter(fn(x) -> String.starts_with?(x, "https") end)
+    |> hd
+    {:ok, finished}
   end
 end
