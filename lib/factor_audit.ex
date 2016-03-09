@@ -10,23 +10,21 @@ defmodule FactorAudit do
 
     IO.puts "Looking for users in #{org_name} org that do not have two factor authentication enabled"
 
-    whitelist = []
-    if length(options) > 0 do
-      case hd(options) do
-        {:whitelist, filename} ->
-          whitelist = WhiteList.read(filename)
-        _ ->
-      end
+    
+    if filename = Keyword.get(options, :whitelist) do
+      go_get_users(make_url(org_name), users, WhiteList.read(filename))
+    else
+      go_get_users(make_url(org_name), users)
     end
 
-    go_get_users(make_url(org_name), users, whitelist)
+
 
     :timer.sleep(1000)
     UserList.get(users) |> Enum.each(fn(x) -> IO.puts("#{elem(x, 0)}, #{elem(x, 1)}, #{elem(x, 2)}") end)
     IO.puts "Found #{length(UserList.get(users))} users with 2fa disabled that weren't on the whitelist"
   end
 
-  defp go_get_users(url, user_list, whitelist) do
+  defp go_get_users(url, user_list, whitelist \\ []) do
     headers = ["User-Agent": "Elixir",
       "Content-Type": "application/json",
       "Authorization": "token #{System.get_env("GITHUB_API_KEY")}"]
